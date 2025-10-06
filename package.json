@@ -8,8 +8,17 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "migrate": "node src/db/migrate.js",
-    "test": "node --test",
-    "lint": "eslint src/"
+    "test": "node --test test/**/*.test.js",
+    "test:watch": "node --test --watch test/**/*.test.js",
+    "test:coverage": "c8 node --test test/**/*.test.js",
+    "test:unit": "node --test test/!(integration)/**/*.test.js",
+    "test:integration": "node --test test/integration/**/*.test.js",
+    "lint": "eslint src/ test/",
+    "lint:fix": "eslint src/ test/ --fix",
+    "format": "prettier --write src/ test/",
+    "format:check": "prettier --check src/ test/",
+    "build": "echo 'No build step required for Node.js project'",
+    "validate": "npm run lint && npm run format:check && npm run test"
   },
   "dependencies": {
     "axios": "^1.6.7",
@@ -20,7 +29,9 @@
     "date-fns": "^3.3.1"
   },
   "devDependencies": {
-    "eslint": "^8.56.0"
+    "eslint": "^8.56.0",
+    "c8": "^8.0.1",
+    "prettier": "^3.2.5"
   },
   "engines": {
     "node": ">=18.0.0"

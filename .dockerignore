@@ -1,25 +1,19 @@
-# Dependencies
+# Node.js
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
-# Environment files (sensitive data)
+# Environment files
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env.staging
 
 # Logs
 logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
 
 # Runtime data
 pids/
@@ -38,9 +32,6 @@ coverage/
 # Dependency directories
 jspm_packages/
 
-# Snowpack dependency directory (https://snowpack.dev/)
-web_modules/
-
 # TypeScript cache
 *.tsbuildinfo
 
@@ -49,15 +40,6 @@ web_modules/
 
 # Optional eslint cache
 .eslintcache
-
-# Optional stylelint cache
-.stylelintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
 
 # Optional REPL history
 .node_repl_history
@@ -75,19 +57,13 @@ web_modules/
 .cache
 .parcel-cache
 
-# Next.js build output
+# next.js build output
 .next
-out
 
-# Nuxt.js build / generate output
+# nuxt.js build output
 .nuxt
-dist
 
-# Gatsby files
-.cache/
-public
-
-# Vuepress build output
+# vuepress build output
 .vuepress/dist
 
 # Serverless directories
@@ -112,6 +88,20 @@ public
 .yarn/install-state.gz
 .pnp.*
 
+# Development files
+README.md
+.gitignore
+.git/
+.github/
+docs/
+test/
+*.test.js
+*.spec.js
+
+# Build artifacts
+dist/
+build/
+
 # IDE files
 .vscode/
 .idea/
@@ -128,53 +118,7 @@ public
 ehthumbs.db
 Thumbs.db
 
-# Temporary folders
-tmp/
-temp/
-
-# Build directories
-build/
-dist/
-
-# Database files (local development)
-*.sqlite
-*.sqlite3
-*.db
-
-# Backup files
-*.bak
-*.backup
-*.sql.gz
-
-# Docker volumes data (if using bind mounts)
-docker-data/
-postgres-data/
-
-# Application specific
-# ETL processing temporary files
-data/raw/
-data/temp/
-data/processed/
-
-# Application logs directory (logs should be in Docker volumes or external)
-logs/
-
-# Test artifacts
-test-results/
-test-reports/
-
-# Certificate files (should be managed securely)
-*.pem
-*.key
-*.crt
-*.p12
-*.pfx
-
-# Archive files
-*.zip
-*.tar.gz
-*.rar
-
-# Local configuration overrides
-config/local.js
-config/local.json
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore

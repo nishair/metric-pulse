@@ -1,0 +1,25 @@
+{
+  "reporter": [
+    "text",
+    "lcov",
+    "html"
+  ],
+  "reportsDir": "./coverage",
+  "tempDirectory": "./coverage/.c8_output",
+  "include": [
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "test/**",
+    "**/*.test.js",
+    "**/*.spec.js",
+    "src/db/migrate.js",
+    "coverage/**"
+  ],
+  "all": true,
+  "checkCoverage": true,
+  "lines": 80,
+  "functions": 80,
+  "branches": 75,
+  "statements": 80
+}

@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ecommerce_analytics_dev
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./src/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev_user -d ecommerce_analytics_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      target: development
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=ecommerce_analytics_dev
+      - DB_USER=dev_user
+      - DB_PASSWORD=dev_password
+      - LOG_LEVEL=debug
+      - ENABLE_SHOPIFY=false
+      - ENABLE_WOOCOMMERCE=false
+      - ENABLE_COMMERCETOOLS=false
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - dev_logs:/app/logs
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["npm", "run", "dev"]
+
+  # Redis for caching (development)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    command: redis-server --appendonly yes
+
+  # Test database for running tests
+  postgres-test:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ecommerce_analytics_test
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./src/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    tmpfs:
+      - /var/lib/postgresql/data
+    profiles:
+      - test
+
+volumes:
+  postgres_dev_data:
+    driver: local
+  dev_logs:
+    driver: local
+  redis_dev_data:
+    driver: local
+
+networks:
+  default:
+    name: ecommerce-analytics-dev-network
