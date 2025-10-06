@@ -1,0 +1,102 @@
+graph TB
+    %% External Data Sources
+    subgraph "E-commerce Platforms"
+        SHOPIFY[Shopify API]
+        WOO[WooCommerce API]
+        CT[Commercetools API]
+    end
+
+    %% ETL Pipeline Components
+    subgraph "ETL Pipeline"
+        direction TB
+
+        subgraph "Connector Layer"
+            SC[Shopify Connector<br/>- Rate limiting<br/>- Pagination<br/>- OAuth]
+            WC[WooCommerce Connector<br/>- Basic Auth<br/>- Pagination]
+            CC[Commercetools Connector<br/>- OAuth 2.0<br/>- Token management]
+        end
+
+        subgraph "Data Processing"
+            DT[Data Transformer<br/>- Normalize formats<br/>- Validate data<br/>- Map fields]
+
+            subgraph "Analytics Engine"
+                CLV[CLV Calculator<br/>- Simple CLV<br/>- Predictive CLV<br/>- RFM Scoring]
+                DM[Daily Metrics<br/>- Revenue<br/>- Order stats<br/>- Top products]
+            end
+        end
+
+        subgraph "Data Loading"
+            PL[PostgreSQL Loader<br/>- Upsert operations<br/>- Transaction management<br/>- Batch processing]
+        end
+    end
+
+    %% Database Layer
+    subgraph "PostgreSQL Database"
+        direction LR
+        subgraph "Core Tables"
+            CUST[(customers)]
+            PROD[(products)]
+            ORD[(orders)]
+            OI[(order_items)]
+        end
+
+        subgraph "Analytics Tables"
+            CM[(customer_metrics)]
+            DAILY[(daily_metrics)]
+        end
+
+        subgraph "System Tables"
+            DS[(data_sources)]
+            ETL[(etl_logs)]
+        end
+    end
+
+    %% Scheduling & Monitoring
+    subgraph "Operations"
+        CRON[Cron Scheduler<br/>Daily @ 2AM]
+        LOG[Winston Logger<br/>- Error tracking<br/>- Performance logs]
+    end
+
+    %% Data Flow
+    SHOPIFY --> SC
+    WOO --> WC
+    CT --> CC
+
+    SC --> DT
+    WC --> DT
+    CC --> DT
+
+    DT --> CLV
+    DT --> DM
+
+    CLV --> PL
+    DM --> PL
+
+    PL --> CUST
+    PL --> PROD
+    PL --> ORD
+    PL --> OI
+    PL --> CM
+    PL --> DAILY
+    PL --> ETL
+
+    CRON -.->|Triggers| SC
+    CRON -.->|Triggers| WC
+    CRON -.->|Triggers| CC
+
+    LOG -.->|Monitors| DT
+    LOG -.->|Monitors| CLV
+    LOG -.->|Monitors| PL
+
+    %% Styling
+    classDef platform fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef connector fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef processor fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef database fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef ops fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+
+    class SHOPIFY,WOO,CT platform
+    class SC,WC,CC connector
+    class DT,CLV,DM,PL processor
+    class CUST,PROD,ORD,OI,CM,DAILY,DS,ETL database
+    class CRON,LOG ops
